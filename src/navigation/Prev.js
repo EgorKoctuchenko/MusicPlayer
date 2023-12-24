@@ -1,7 +1,7 @@
 import "../App.css";
 
-function App() {
+function Prev() {
   return <div className="prev_s"></div>;
 }
 
-export default App;
+export default Prev;
