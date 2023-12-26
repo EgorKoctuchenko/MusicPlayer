@@ -11,7 +11,10 @@ function MainMenu(props) {
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
     >
       <Prev></Prev>
-      <Leng></Leng>
+      <Leng
+        MUSIC_ARR={props.MUSIC_ARR}
+        currentIndex={props.currentIndex}
+      ></Leng>
       <div className="pre_buttons">
         <svg
           className="isLeft"
@@ -29,7 +32,10 @@ function MainMenu(props) {
         </svg>
         <div className="buttons">
           <LeftButton></LeftButton>
-          <PlayButton></PlayButton>
+          <PlayButton
+            MUSIC_ARR={props.MUSIC_ARR}
+            currentIndex={props.currentIndex}
+          ></PlayButton>
           <RightButton></RightButton>
         </div>
         <svg
