@@ -4,8 +4,23 @@ import PlayButton from "./navigation/PlayButton";
 import RightButton from "./navigation/RightButton";
 import Prev from "./navigation/Prev";
 import Leng from "./navigation/LenAudio";
+import React, { useState } from "react";
 
 function MainMenu(props) {
+  const [lengMusic, setLengMusic] = useState(0);
+  const handleLengAudio = (thisLeng) => {
+    setLengMusic(thisLeng);
+  };
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const handleIsPlaying = (PlayStatus2) => {
+    if (PlayStatus2) {
+      setIsPlaying(true);
+    } else {
+      setIsPlaying(false);
+    }
+  };
+
   return (
     <div
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
@@ -14,6 +29,8 @@ function MainMenu(props) {
       <Leng
         MUSIC_ARR={props.MUSIC_ARR}
         currentIndex={props.currentIndex}
+        thisLeng={lengMusic}
+        isPlaying={isPlaying}
       ></Leng>
       <div className="pre_buttons">
         <svg
@@ -35,6 +52,8 @@ function MainMenu(props) {
           <PlayButton
             MUSIC_ARR={props.MUSIC_ARR}
             currentIndex={props.currentIndex}
+            handleLengAudio={handleLengAudio}
+            handleIsPlaying={handleIsPlaying}
           ></PlayButton>
           <RightButton></RightButton>
         </div>

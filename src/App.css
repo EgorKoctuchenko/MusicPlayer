@@ -389,10 +389,12 @@ h6 {
 
 .isEqTwo {
   background-color: red;
+  margin-bottom: 10px;
 }
 
 .isNotEqTwo {
   background-color: white;
+  margin-bottom: 10px;
 }
 
 .control_buttons {
@@ -508,6 +510,64 @@ h6 {
   cursor: pointer;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+}
+
+.upload {
+  cursor: pointer;
+  position: absolute;
+  background-color: rgb(62, 119, 119);
+  width: 100px;
+  height: 100px;
+  bottom: 5vh;
+  right: 250px;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.text_yes {
+  cursor: pointer;
+  position: absolute;
+  background-color: rgb(62, 119, 119);
+  font-size: 2em;
+  bottom: 5vh;
+  right: 500px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  opacity: 0;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.selectedMusic {
+  -webkit-box-shadow: 5px 5px 5px green;
+          box-shadow: 5px 5px 5px green;
+}
+
+.text_app {
+  opacity: 1;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+.text_rem {
+  opacity: 0;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
 }
 
 .settings:hover {

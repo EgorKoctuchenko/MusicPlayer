@@ -6,41 +6,20 @@ import React, { useState, useEffect } from "react";
 import Music from "./Music";
 
 function App() {
-  //localStorage.clear();
+  localStorage.clear();
   //
   //Массив музык
   //
-  const storedMusicArr = JSON.parse(localStorage.getItem("MUSIC_ARR")) || [];
-  const [MUSIC_ARR, setMUSIC_ARR] = useState(storedMusicArr);
-  function handleFileChange(event) {
-    const selectedFile = event.target.files[0];
+  //const storedMusicArrString = localStorage.getItem("MUSIC_ARR");
+  //const storedMusicArr = storedMusicArrString
+  //? JSON.parse(storedMusicArrString)
+  //: [];
+  const [MUSIC_ARR, setMUSIC_ARR] = useState([]);
 
-    // Обработка выбора файла, например, добавление в массив MUSIC_ARR
-    if (selectedFile) {
-      const reader = new FileReader();
-
-      reader.onloadend = () => {
-        const audio = new Audio(reader.result);
-        audio.onloadedmetadata = () => {
-          console.log("Selected File Type:", selectedFile.type);
-          const newMusic = {
-            name: selectedFile.name.replace(/\.[^/.]+$/, ""),
-            file: new Blob([selectedFile], { type: selectedFile.type }), // преобразовываем в Blob
-            duration: audio.duration,
-            index: isCurrentIndex,
-          };
-
-          setMUSIC_ARR((prevMUSIC_ARR) => {
-            const newMusicArr = [...prevMUSIC_ARR, newMusic];
-            localStorage.setItem("MUSIC_ARR", JSON.stringify(newMusicArr));
-            return newMusicArr;
-          });
-        };
-      };
-
-      reader.readAsDataURL(selectedFile);
-    }
-  }
+  const updateMUSIC_ARR = (newMusicArr) => {
+    setMUSIC_ARR(newMusicArr);
+    localStorage.setItem("MUSIC_ARR", JSON.stringify(newMusicArr));
+  };
   //
   //Для бургер меню
   //
@@ -55,7 +34,7 @@ function App() {
   //
   //Для главной страницы
   //
-  const [isMainMenu, setMainMenu] = useState(true);
+  const [isMainMenu, setMainMenu] = useState(false);
   function handleIsMainMenu() {
     setMainMenu(true);
     setMusic(false);
@@ -63,7 +42,7 @@ function App() {
   //
   //Для музыки
   //
-  const [isMusic, setMusic] = useState(false);
+  const [isMusic, setMusic] = useState(true);
   function handleIsMusic() {
     setMainMenu(false);
     setMusic(true);
@@ -98,10 +77,10 @@ function App() {
       {isMusic && (
         <Music
           isOpen={isOpen}
-          onFileChange={handleFileChange}
           MUSIC_ARR={MUSIC_ARR}
           getIndex={handleIndexClick}
           currentIndex={isCurrentIndex}
+          setMUSIC_ARR={updateMUSIC_ARR}
         ></Music>
       )}
     </div>
