@@ -1,0 +1,23 @@
+[33mcommit f2a6721026a09b598adaba7bb9332d3bc4050b92[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: EgorKoctuchenko <egorkoctenko098@gmail.com>
+Date:   Tue Dec 26 13:17:22 2023 +0200
+
+    0.3.0
+
+[33mcommit 0e5cf4b4363afe13130014e94c750c13ccaaabbd[m
+Author: EgorKoctuchenko <egorkoctenko098@gmail.com>
+Date:   Sun Dec 24 12:56:07 2023 +0200
+
+    0.2.0
+
+[33mcommit 417556ac545df89b6459b0c600757ea9c7d4a5cc[m
+Author: EgorKoctuchenko <egorkoctenko098@gmail.com>
+Date:   Sat Dec 23 11:17:04 2023 +0200
+
+    0.1.0
+
+[33mcommit 9841fdb0613f9898a2588c2e5db022ea83f1143e[m
+Author: EgorKoctuchenko <egorkoctenko098@gmail.com>
+Date:   Fri Dec 22 10:22:33 2023 +0200
+
+    Initialize project using Create React App

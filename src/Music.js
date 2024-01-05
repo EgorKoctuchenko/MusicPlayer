@@ -4,19 +4,22 @@ import LeftButton from "./navigation/LeftButton";
 import PlayButton from "./navigation/PlayButton";
 import RightButton from "./navigation/RightButton";
 import Leng from "./navigation/LenAudio";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 const dbx = new Dropbox({
   accessToken:
-    "sl.Bs83yNeHIEv2DE_wXOqIwrWZMpO73x0rDwgHM-uWNadXQLdOAqSe8qaBb5A6lXKFSU_Cxoemf4Lar3mAN48AbKwm-B7AaOf-BsFlcrKqUYmXgn3L2oMQKAVyi3NZJTxYJJLS230PXVyd", // Замените на ваш ключ доступа
+    "sl.BtGirtwUv3iIc36Jpmu9JxqwA6B3DSZA27xMHkggu5WSiwOZfnRfH0FwTL8_hl_gVqKL-aq4V9Q2p_XHvFxOeZo-knEPCgubNxJnwvplJcbBb8n-Fb9V4MnkHiPsLFmaSaKwIlvhQwGk", // Замените на ваш ключ доступа
 });
 
 function Music(props) {
+  //Чтобы не было ошибки с функцией рандом
   const [loadingDropboxMusic, setLoadingDropboxMusic] = useState(false);
   const [statusUpload, setStatusUpload] = useState(false);
-  const [lengMusic, setLengMusic] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+
+  //
+  //Состояние, для корректного отображения таймера и длительности музыки
+  //
   //
   //Выбор музыки
   //
@@ -132,39 +135,45 @@ function Music(props) {
     }
   };
 
-  const handleLengAudio = (thisLeng) => {
-    setLengMusic(thisLeng);
-  };
-
-  const handleIsPlaying = (PlayStatus2) => {
-    if (PlayStatus2) {
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-    }
-  };
-
   return (
     <div
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
     >
       <div className="upcase">
         <Leng
+          setCurLen={props.setCurLen}
+          curLen={props.curLen}
+          isTimer={props.isTimer}
+          setIsTimer={props.setIsTimer}
           className="leng_music"
           MUSIC_ARR={props.MUSIC_ARR}
           currentIndex={props.currentIndex}
-          thisLeng={lengMusic}
-          isPlaying={isPlaying}
+          thisLeng={props.lengMusic}
+          isPlaying={props.isPlaying}
         ></Leng>
         <div className="control_buttons">
-          <LeftButton></LeftButton>
+          <LeftButton
+            getIndex={props.getIndex}
+            handleIsPlaying={props.handleIsPlaying}
+            currentIndex={props.currentIndex}
+            MUSIC_ARR={props.MUSIC_ARR}
+          ></LeftButton>
           <PlayButton
+            handleIsPlay={props.handleIsPlay}
+            setIsTimer={props.setIsTimer}
+            isRandom={props.handleIsRand}
             MUSIC_ARR={props.MUSIC_ARR}
             currentIndex={props.currentIndex}
-            handleLengAudio={handleLengAudio}
-            handleIsPlaying={handleIsPlaying}
+            handleLengAudio={props.handleLengAudio}
+            handleIsPlaying={props.handleIsPlaying}
+            isPlay={props.isPlay}
           ></PlayButton>
-          <RightButton></RightButton>
+          <RightButton
+            getIndex={props.getIndex}
+            handleIsPlaying={props.handleIsPlaying}
+            currentIndex={props.currentIndex}
+            MUSIC_ARR={props.MUSIC_ARR}
+          ></RightButton>
         </div>
       </div>
       <div className="botcase">
@@ -176,10 +185,10 @@ function Music(props) {
             key={index}
             onClick={() => {
               props.getIndex(index);
+              props.setIsTimer(true);
               console.log(props.currentIndex);
             }}
           >
-            {music.name}
             <span>{music.name}</span>
             <a
               href={music.file}

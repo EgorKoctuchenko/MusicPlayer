@@ -7,30 +7,23 @@ import Leng from "./navigation/LenAudio";
 import React, { useState } from "react";
 
 function MainMenu(props) {
-  const [lengMusic, setLengMusic] = useState(0);
-  const handleLengAudio = (thisLeng) => {
-    setLengMusic(thisLeng);
-  };
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const handleIsPlaying = (PlayStatus2) => {
-    if (PlayStatus2) {
-      setIsPlaying(true);
-    } else {
-      setIsPlaying(false);
-    }
-  };
+  //
+  //Состояние, для корректного отображения таймера и длительности музыки
+  //
 
   return (
     <div
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
     >
-      <Prev></Prev>
+      <Prev isRandom={props.isRand} isHandleRand={props.handleIsRand}></Prev>
       <Leng
+        setCurLen={props.setCurLen}
+        curLen={props.curLen}
+        setIsTimer={props.setIsTimer}
         MUSIC_ARR={props.MUSIC_ARR}
         currentIndex={props.currentIndex}
-        thisLeng={lengMusic}
-        isPlaying={isPlaying}
+        thisLeng={props.lengMusic}
+        isPlaying={props.isPlaying}
       ></Leng>
       <div className="pre_buttons">
         <svg
@@ -48,14 +41,28 @@ function MainMenu(props) {
           <polygon points="18 2.8 5 12 19 22 19 2" fill="#6f46dd"></polygon>
         </svg>
         <div className="buttons">
-          <LeftButton></LeftButton>
+          <LeftButton
+            getIndex={props.getIndex}
+            handleIsPlaying={props.handleIsPlaying}
+            currentIndex={props.currentIndex}
+            MUSIC_ARR={props.MUSIC_ARR}
+          ></LeftButton>
           <PlayButton
+            handleIsPlay={props.handleIsPlay}
+            setIsTimer={props.setIsTimer}
+            isRandom={props.handleIsRand}
             MUSIC_ARR={props.MUSIC_ARR}
             currentIndex={props.currentIndex}
-            handleLengAudio={handleLengAudio}
-            handleIsPlaying={handleIsPlaying}
+            handleLengAudio={props.handleLengAudio}
+            handleIsPlaying={props.handleIsPlaying}
+            isPlay={props.isPlay}
           ></PlayButton>
-          <RightButton></RightButton>
+          <RightButton
+            getIndex={props.getIndex}
+            handleIsPlaying={props.handleIsPlaying}
+            currentIndex={props.currentIndex}
+            MUSIC_ARR={props.MUSIC_ARR}
+          ></RightButton>
         </div>
         <svg
           className="isRight"

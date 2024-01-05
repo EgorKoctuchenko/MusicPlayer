@@ -1,65 +1,11 @@
 import "../App.css";
 import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
-import { Howl } from "howler";
 
 function PlayButton(props) {
-  const [isPlay, setIsPlay] = useState(false);
-  const sound = useRef(null);
-  const currentMusic = props.MUSIC_ARR[props.currentIndex];
   //console.log("Current Music File:", currentMusic.file);
 
-  const initializeSound = () => {
-    if (sound.current) {
-      sound.current.stop(); // Останавливаем предыдущий звук
-      sound.current.unload(); // Освобождаем ресурсы
-    }
-    if (currentMusic && currentMusic.file) {
-      sound.current = new Howl({
-        src: [currentMusic.file],
-        format: ["mp3"],
-        onload: () => {
-          props.handleLengAudio(sound.current.duration());
-          setIsPlay(true);
-          sound.current.play();
-          props.handleIsPlaying(true);
-        },
-        onend: () => {
-          setIsPlay(false);
-        },
-        onloaderror: (id, error) => {
-          console.error(
-            "Error loading sound. File:",
-            currentMusic.file,
-            "Error:",
-            error
-          );
-        },
-      });
-    } else {
-      console.error("Current music or file is undefined:", currentMusic);
-    }
-  };
-
-  useEffect(() => {
-    initializeSound();
-  }, [props.currentIndex]);
-
-  const handleIsPlay = () => {
-    setIsPlay((prevIsPlay) => !prevIsPlay);
-
-    if (sound.current) {
-      if (isPlay) {
-        sound.current.pause();
-        props.handleIsPlaying(false);
-      } else {
-        sound.current.play();
-        props.handleIsPlaying(true);
-      }
-    }
-  };
-
-  const playPauseIcon = isPlay ? (
+  const playPauseIcon = props.isPlay ? (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="50"
@@ -91,7 +37,7 @@ function PlayButton(props) {
   );
 
   return (
-    <div className="play_button" onClick={handleIsPlay}>
+    <div className="play_button" onClick={props.handleIsPlay}>
       {playPauseIcon}
     </div>
   );
