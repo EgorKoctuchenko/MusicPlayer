@@ -1,3 +1,4 @@
+//Компонент, для отображения определенной gif на mainmenu
 import "../App.css";
 import gif1 from "../gifies/1.gif";
 import gif2 from "../gifies/2.gif";
@@ -14,7 +15,17 @@ import gif12 from "../gifies/12.gif";
 import React, { useState, useEffect } from "react";
 
 function Prev(props) {
-  const [currentGif, setCurrentGif] = useState(gif1);
+  //
+  //Изначально, устанавливаем gif1
+  //
+  const [currentGif, setCurrentGif] = useState(() => {
+    const storedGif = localStorage.getItem("currentGif");
+    return storedGif || gif1; // Если нет сохраненной gif, используем gif1
+  });
+  //
+  //Хук, который при выполнении выбирает случайную gif (работает лишь в том случае, если же трек был)
+  //поменян на другой (ПАУЗА / ПРОИГРЫВАНИЕ НЕ СЧИТАЮТСЯ)
+  //
   useEffect(() => {
     if (props.isRandom) {
       const gifs = [
@@ -33,6 +44,10 @@ function Prev(props) {
       ];
       const randomIndex = Math.floor(Math.random() * gifs.length);
       const randomGif = gifs[randomIndex];
+
+      //Сохраняем текущую gif в localStorage
+      localStorage.setItem("currentGif", randomGif);
+
       setCurrentGif(randomGif);
       props.isHandleRand();
     }
@@ -40,7 +55,9 @@ function Prev(props) {
   return (
     <div
       className="prev_s"
-      style={{ backgroundImage: `url("${currentGif}")` }}
+      style={{
+        backgroundImage: props.isGif ? `url("${currentGif}")` : "none",
+      }}
     ></div>
   );
 }

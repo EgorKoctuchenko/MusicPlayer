@@ -1,3 +1,4 @@
+//Компонент, служащий для музыки, работы с ней, а также выбора музыки
 import { Dropbox } from "dropbox";
 import "./App.css";
 import LeftButton from "./navigation/LeftButton";
@@ -6,78 +7,101 @@ import RightButton from "./navigation/RightButton";
 import Leng from "./navigation/LenAudio";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import ErrorPop from "./navigation/popup/ErrorPop";
+import RepeatSong from "./navigation/RepeatSong";
+import Volume from "./navigation/Volume";
 
+//
+//В качестве базы данных - используется DropBox
+//
 const dbx = new Dropbox({
   accessToken:
-    "sl.BtGirtwUv3iIc36Jpmu9JxqwA6B3DSZA27xMHkggu5WSiwOZfnRfH0FwTL8_hl_gVqKL-aq4V9Q2p_XHvFxOeZo-knEPCgubNxJnwvplJcbBb8n-Fb9V4MnkHiPsLFmaSaKwIlvhQwGk", // Замените на ваш ключ доступа
+    "sl.BtXLiC4IzFEl-zIMB3p9QjWs64rxjyIfDejJBCow42_LAGS0-DxmKkuAvX3g2cprOOoX3PskWkv4DIbnlWVGi2o5vUCCqdDcCsU6rQg409Dg0Z7gqtIZ3RGT0n30Dk1nRzwrEljd79FT", // Замените на ваш ключ доступа
 });
 
 function Music(props) {
-  //Чтобы не было ошибки с функцией рандом
+  //
+  //Отслеживание состояния загрузки музыки ИЗ DropBox
+  //
   const [loadingDropboxMusic, setLoadingDropboxMusic] = useState(false);
+  //
+  //Отслеживание состояния загрузки музыки В DropBox
+  //
   const [statusUpload, setStatusUpload] = useState(false);
-
-  //
-  //Состояние, для корректного отображения таймера и длительности музыки
-  //
-  //
-  //Выбор музыки
   //
   //Из DropBox
   //
   const handleAddMusicFromDropbox = async () => {
     try {
       setLoadingDropboxMusic(true);
-
+      //
+      //Ждем выполнения загрузки всех музыки из папки music. Используется await для ожидания
+      //
       const response = await dbx.filesListFolder({ path: "/music" });
 
       if (!response.result || !response.result.entries) {
-        console.error(
-          "Error fetching music from Dropbox. No 'entries' property in the response:",
-          response
+        props.setInfoError(
+          "Error fetching music from Dropbox. No 'entries' property in the response: " +
+            response
         );
+        props.setGettingError(true);
         return;
       }
-
+      //
+      //Фильтрация полученных данных, поскольку, нам нужны лишь файлы
+      //
       const musicFiles = response.result.entries.filter(
         (entry) => entry[".tag"] === "file"
       );
-
-      const newMusicArr = [];
-
+      const newMusicArr = []; //Массив музык (временный)
+      //
+      //Сохраняем ВСЕ файлы, которые были полученны из dropbox
+      //
       for (const file of musicFiles) {
         try {
+          //
+          //Пытаемся получить временную ссылку, для дальнейших манипуляций
+          //
           const temporaryLink = await dbx.filesGetTemporaryLink({
             path: file.path_display,
           });
 
+          //Присваиваем blobUrl значение временной ссылки
           const blobUrl = temporaryLink.result.link;
 
+          //В массив, запихиваем ВСЕ НЕОБХОДИМЫЕ данные
           newMusicArr.push({
-            name: file.name,
+            name: file.name.replace(/\.mp3$/, ""), //Регулярные выражения, для того,
+            //чтобы убрать ".mp3", которые присущи всем mp3 файлам. Пока что, только mp3.
             file: blobUrl,
             duration: 0,
             index: newMusicArr.length,
             fromDropbox: true,
           });
         } catch (error) {
-          console.error("Error getting temporary link from Dropbox:", error);
+          props.setInfoError(
+            "Error getting temporary link from Dropbox: " + error
+          );
+          props.setGettingError(true);
         }
       }
-
-      // Обновляем состояние компонента и добавляем музыку из Dropbox в массив
+      //
+      //Обновляем состояние компонента и добавляем музыку из Dropbox в массив
+      //
       props.setMUSIC_ARR(() => {
         const updatedMusicArr = [...newMusicArr.filter(Boolean)];
-        localStorage.setItem("MUSIC_ARR", JSON.stringify(updatedMusicArr));
         return updatedMusicArr;
       });
     } catch (error) {
-      console.error("Error fetching music from Dropbox:", error);
+      props.setInfoError("Error fetching music from Dropbox: " + error);
+      props.setGettingError(true);
 
       if (error.response) {
-        console.error("Dropbox API error:", error.response);
+        props.setInfoError("Dropbox API error: " + error.response);
+        props.setGettingError(true);
       } else {
-        console.error("Unexpected error format:", error);
+        props.setInfoError("Unexpected error format: " + error);
+        props.setGettingError(true);
       }
     } finally {
       setLoadingDropboxMusic(false);
@@ -89,15 +113,15 @@ function Music(props) {
   const handleUploadMusicToDropbox = async () => {
     try {
       setLoadingDropboxMusic(true);
-
+      //Требование, чтобы был загружен файл, а не что-либо другое
       const fileInput = document.createElement("input");
       fileInput.type = "file";
-
-      // Обработчик события change
+      //Обработчик события change
       const handleChange = async (event) => {
         const file = event.target.files[0];
 
         if (file) {
+          //Асинхронная загрузка файла, в указанное место и указанный тип (файл)
           const response = await dbx.filesUpload({
             path: `/music/${file.name}`,
             contents: file,
@@ -105,30 +129,30 @@ function Music(props) {
 
           console.log("File uploaded to Dropbox:", response);
           setStatusUpload(true);
+          //Сразу же, добавляем эту музыку в наш список (вызовя функцию)
           await handleAddMusicFromDropbox();
           setStatusUpload(false);
-          console.log("123");
         }
       };
-
-      // Добавляем обработчик change
+      //Добавляем обработчик change
       fileInput.addEventListener("change", handleChange);
-
-      // Вызываем click после добавления обработчика
+      //Вызываем click после добавления обработчика
       fileInput.click();
-
       // Возвращаем Promise
       return new Promise((resolve) => {
         // Добавляем resolve после вызова click
         resolve();
       });
     } catch (error) {
-      console.error("Error uploading music to Dropbox:", error);
+      props.setInfoError("Error uploading music to Dropbox: " + error);
+      props.setGettingError(true);
 
       if (error.response) {
-        console.error("Dropbox API error:", error.response);
+        props.setInfoError("Dropbox API error: " + error);
+        props.setGettingError(true);
       } else {
-        console.error("Unexpected error format:", error);
+        props.setInfoError("Unexpected error format: " + error);
+        props.setGettingError(true);
       }
     } finally {
       setLoadingDropboxMusic(false);
@@ -139,8 +163,17 @@ function Music(props) {
     <div
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
     >
+      {props.gettingError && (
+        <ErrorPop
+          errorType={props.infoError}
+          handleGettingError={props.handleGettingError}
+        ></ErrorPop>
+      )}
       <div className="upcase">
         <Leng
+          isRepeat={props.isRepeat}
+          languageOptions={props.languageOptions}
+          isLoading={props.isLoading}
           setCurLen={props.setCurLen}
           curLen={props.curLen}
           isTimer={props.isTimer}
@@ -152,11 +185,16 @@ function Music(props) {
           isPlaying={props.isPlaying}
         ></Leng>
         <div className="control_buttons">
+          <RepeatSong
+            handleRepeat={props.handleRepeat}
+            isRepeat={props.isRepeat}
+          ></RepeatSong>
           <LeftButton
             getIndex={props.getIndex}
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
             MUSIC_ARR={props.MUSIC_ARR}
+            setIsTimer={props.setIsTimer}
           ></LeftButton>
           <PlayButton
             handleIsPlay={props.handleIsPlay}
@@ -173,7 +211,12 @@ function Music(props) {
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
             MUSIC_ARR={props.MUSIC_ARR}
+            setIsTimer={props.setIsTimer}
           ></RightButton>
+          <Volume
+            handleVolumeChange={props.handleVolumeChange}
+            volume={props.volume}
+          ></Volume>
         </div>
       </div>
       <div className="botcase">

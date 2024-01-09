@@ -1,10 +1,10 @@
+//Компонент для кнопки "Проигрывание/Пауза"
 import "../App.css";
-import React, { useState, useRef, useEffect } from "react";
-import axios from "axios";
 
 function PlayButton(props) {
-  //console.log("Current Music File:", currentMusic.file);
-
+  //
+  //playPauseIcon получает значение определенного svg в зависимости, трек на паузе или нет
+  //
   const playPauseIcon = props.isPlay ? (
     <svg
       xmlns="http://www.w3.org/2000/svg"

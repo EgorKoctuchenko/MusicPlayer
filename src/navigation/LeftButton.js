@@ -1,17 +1,24 @@
+//Кнопка "предыдущий трек"
+
 import "../App.css";
 
 function LeftButton(props) {
+  //
+  //Функция для переключения на предыдущий трек
+  //
   const playPrevMusic = () => {
+    props.setIsTimer(true);
     const nextIndex = getNextIndex();
-    props.handleIsPlaying(false); // Остановить воспроизведение перед переключением
-    props.getIndex(nextIndex); // Установить новый индекс
+    props.handleIsPlaying(false); //Остановить воспроизведение перед переключением
+    props.getIndex(nextIndex); //Установить новый индекс
   };
-
+  //
+  //Получение индекса для предыдущего трека
+  //
   const getNextIndex = () => {
     const currentIndex = props.currentIndex;
     const nextIndex = currentIndex - 1;
-
-    // Если достигнут конец массива, вернуть первый элемент
+    // Если достигнуто начало массива, вернуть последний элемент
     if (nextIndex < 0) {
       return props.MUSIC_ARR.length - 1;
     }

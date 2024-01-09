@@ -1,3 +1,4 @@
+//Этот компонент служит для страницы с гиф а также небольшой визуализацией
 import "./App.css";
 import LeftButton from "./navigation/LeftButton";
 import PlayButton from "./navigation/PlayButton";
@@ -5,18 +6,48 @@ import RightButton from "./navigation/RightButton";
 import Prev from "./navigation/Prev";
 import Leng from "./navigation/LenAudio";
 import React, { useState } from "react";
+import BackFon from "./BackFon";
+import BackFon2 from "./BackFon2";
+import RepeatSong from "./navigation/RepeatSong";
+import Volume from "./navigation/Volume";
 
 function MainMenu(props) {
-  //
-  //Состояние, для корректного отображения таймера и длительности музыки
-  //
-
   return (
     <div
       className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
     >
-      <Prev isRandom={props.isRand} isHandleRand={props.handleIsRand}></Prev>
+      {props.isPlay && !props.isLoading && (
+        <BackFon
+          isRectangle={props.isRectangle}
+          isImagine={props.isImagine}
+          isFullPage={props.isFullPage}
+        ></BackFon>
+      )}
+      {!props.isPlay && (
+        <BackFon2
+          isRectangle={props.isRectangle}
+          isImagine={props.isImagine}
+          isFullPage={props.isFullPage}
+        ></BackFon2>
+      )}
+      {!props.isLoading && (
+        <BackFon2
+          isRectangle={props.isRectangle}
+          isImagine={props.isImagine}
+          isFullPage={props.isFullPage}
+        ></BackFon2>
+      )}
+
+      <Prev
+        isRandom={props.isRand}
+        isHandleRand={props.handleIsRand}
+        isGif={props.isGif}
+      ></Prev>
+
       <Leng
+        languageOptions={props.languageOptions}
+        isLoading={props.isLoading}
+        isTimer={props.isTimer}
         setCurLen={props.setCurLen}
         curLen={props.curLen}
         setIsTimer={props.setIsTimer}
@@ -41,11 +72,16 @@ function MainMenu(props) {
           <polygon points="18 2.8 5 12 19 22 19 2" fill="#6f46dd"></polygon>
         </svg>
         <div className="buttons">
+          <RepeatSong
+            handleRepeat={props.handleRepeat}
+            isRepeat={props.isRepeat}
+          ></RepeatSong>
           <LeftButton
             getIndex={props.getIndex}
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
             MUSIC_ARR={props.MUSIC_ARR}
+            setIsTimer={props.setIsTimer}
           ></LeftButton>
           <PlayButton
             handleIsPlay={props.handleIsPlay}
@@ -62,7 +98,13 @@ function MainMenu(props) {
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
             MUSIC_ARR={props.MUSIC_ARR}
+            setIsTimer={props.setIsTimer}
           ></RightButton>
+          <Volume
+            isMainMenu={props.isMainMenu}
+            handleVolumeChange={props.handleVolumeChange}
+            volume={props.volume}
+          ></Volume>
         </div>
         <svg
           className="isRight"
