@@ -1,10 +1,12 @@
 //Компонент для повторения одного и того же трека
 import "../App.css";
-import React, { useState, useEffect } from "react";
 
 function RepeatSong(props) {
   return (
-    <div className="repeat_fixing" onClick={props.handleRepeat}>
+    <div
+      className={`${props.isMainMenu ? "repeat_fixing" : "repeat_fixingMUS"}`}
+      onClick={props.handleRepeat}
+    >
       <svg
         className={`"" ${props.isRepeat ? "repeatStyle" : ""}`}
         fill="#000000"

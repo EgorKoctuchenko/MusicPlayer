@@ -7,7 +7,6 @@ function PlayButton(props) {
   //
   const playPauseIcon = props.isPlay ? (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       width="50"
       height="50"
       viewBox="0 0 24 24"
@@ -22,7 +21,6 @@ function PlayButton(props) {
     </svg>
   ) : (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       width="50"
       height="50"
       viewBox="0 0 24 24"
@@ -37,7 +35,10 @@ function PlayButton(props) {
   );
 
   return (
-    <div className="play_button" onClick={props.handleIsPlay}>
+    <div
+      className={`${props.isMainMenu ? "play_button" : "play_buttonMUS"}`}
+      onClick={props.handleIsPlay}
+    >
       {playPauseIcon}
     </div>
   );

@@ -45,7 +45,10 @@ function App() {
   //
   //Для главной страницы
   //
-  const [isMainMenu, setMainMenu] = useState(false);
+  const [isMainMenu, setMainMenu] = useState(() => {
+    const savedValue = localStorage.getItem("isMainMenu");
+    return savedValue ? JSON.parse(savedValue) : true;
+  });
   function handleIsMainMenu() {
     setMainMenu(true);
     setMusic(false);
@@ -54,7 +57,10 @@ function App() {
   //
   //Для музыки (листа музыки)
   //
-  const [isMusic, setMusic] = useState(true);
+  const [isMusic, setMusic] = useState(() => {
+    const savedValue = localStorage.getItem("isMusic");
+    return savedValue ? JSON.parse(savedValue) : false;
+  });
   function handleIsMusic() {
     setMainMenu(false);
     setMusic(true);
@@ -63,12 +69,23 @@ function App() {
   //
   //Для настроек
   //
-  const [isSet, setSet] = useState(false);
+  const [isSet, setSet] = useState(() => {
+    const savedValue = localStorage.getItem("isSetting");
+    return savedValue ? JSON.parse(savedValue) : false;
+  });
   function handleIsSet() {
     setMainMenu(false);
     setMusic(false);
     setSet(true);
   }
+  //
+  //Правильное отображение страницы ПОСЛЕ перезапуска страницы
+  //
+  useEffect(() => {
+    localStorage.setItem("isMainMenu", isMainMenu);
+    localStorage.setItem("isMusic", isMusic);
+    localStorage.setItem("isSetting", isSet);
+  }, [isMainMenu, isMusic, isSet]);
   //Для отображения количество прямоугольников (по дефолту - 100)
   const [isRectangle, setRectangle] = useState(() => {
     const savedValue = localStorage.getItem("isRectangle");
@@ -101,6 +118,10 @@ function App() {
   const handleIndexClick = (index) => {
     setCurrentIndex(index);
   };
+  const isCurrentIndexRef = useRef(isCurrentIndex);
+  useEffect(() => {
+    isCurrentIndexRef.current = isCurrentIndex;
+  }, [isCurrentIndex]);
   /////
   //curLen - нужен для определения ТЕКУЩЕЙ длины трека (с момента начала).
   /////
@@ -115,7 +136,12 @@ function App() {
   /////
   const playNextMusic = () => {
     const nextIndex = getNextIndex();
-    handleIsPlaying(false); //Остановить воспроизведение перед переключением
+    setIsPlay(false);
+    setIsTimer(true);
+    if (sound.current) {
+      sound.current.stop(); //Остановить предыдущую музыку
+    }
+    //Остановить воспроизведение перед переключением
     handleIndexClick(nextIndex); //Установить новый индекс
   };
   const playAgainMusic = () => {
@@ -174,6 +200,9 @@ function App() {
       }
     }
   };
+  //
+  //Для повторения трека
+  //
   const [isRepeat, setRepeat] = useState(() => {
     const savedValue = localStorage.getItem("isRepeat");
     return savedValue ? JSON.parse(savedValue) : false;
@@ -181,6 +210,10 @@ function App() {
   const handleRepeat = () => {
     setRepeat((prevRepeat) => !prevRepeat);
   };
+  const isRepeatRef = useRef(isRepeat);
+  useEffect(() => {
+    isRepeatRef.current = isRepeat;
+  }, [isRepeat]);
   //
   //Функция, для правильного установления значения setIsPlaying
   //(Да, можно было проще как вверху сделать, но пусть уже так. О верхней записи
@@ -201,6 +234,13 @@ function App() {
     isRand ? setIsRand(false) : setIsRand(true);
   };
   //
+  //Число для определения стилей (динамично). БУДУЩАЯ ИДЕЯ!!
+  //
+  const [isStyleChange, setStyleChange] = useState(false);
+  const handleIsStyleChange = (value) => {
+    setStyleChange(value);
+  };
+  //
   //Рандомное число (для гифки)
   //
   const [isPlay, setIsPlay] = useState(true);
@@ -218,9 +258,14 @@ function App() {
   //
   //Громкость музыки
   //
-  const [volume, setVolume] = useState(1);
+  const [volume, setVolume] = useState(() => {
+    const savedValue = localStorage.getItem("isVolume");
+    return savedValue ? JSON.parse(savedValue) : 1;
+  });
+
   const handleVolumeChange = (newVolume) => {
     setVolume(newVolume);
+    localStorage.setItem("isVolume", volume);
     if (sound.current) {
       sound.current.volume(newVolume);
     }
@@ -228,14 +273,7 @@ function App() {
   //
   //Переменная, имеющая значение нынешнего трека
   //
-  const isRepeatRef = useRef(isRepeat);
   const currentMusic = MUSIC_ARR[isCurrentIndex];
-  //
-  //
-  //
-  useEffect(() => {
-    isRepeatRef.current = isRepeat;
-  }, [isRepeat]);
   //
   //Функция инициализации музыки. Была перемещена из компонента PlayButton дабы
   //устронить баг
@@ -268,6 +306,7 @@ function App() {
             playAgainMusic();
             setIsTimer(true);
           } else {
+            handleIsPlaying(false);
             playNextMusic();
           }
         },
@@ -287,6 +326,25 @@ function App() {
         setInfoError("Current music or file is undefined: " + currentMusic);
         setGettingError(true);
       }
+    }
+  };
+  //
+  //Удаление музыки
+  //
+  const handleDeleteMusic = () => {
+    sound.current.stop();
+    sound.current.unload();
+    handleIsPlaying(false);
+    setIsTimer(true);
+    if (isCurrentIndex !== 0) {
+      handleIndexClick(isCurrentIndex - 1);
+      playNextMusic();
+    } else {
+      handleIndexClick(isCurrentIndex + 1);
+      playNextMusic();
+      setTimeout(() => {
+        handleIndexClick(0);
+      }, 2000);
     }
   };
   //
@@ -310,6 +368,8 @@ function App() {
       SettingNAV: "Налаштування",
       LoadingMUS: "Завантаження",
       NothingMUS: "Музика не вибрана",
+      SucLoadingMUS: "Файл успішно завантажено",
+      SucDeleteMUS: "Файл успішно видалено",
     },
     {
       SoundSetting: "Найстройки звуковой полосы",
@@ -328,6 +388,8 @@ function App() {
       SettingNAV: "Настройки",
       LoadingMUS: "Загрузка",
       NothingMUS: "Музыка не выбрана",
+      SucLoadingMUS: "Файл успешно загружен",
+      SucDeleteMUS: "Файл успешно удален",
     },
     {
       SoundSetting: "Sound bar settings",
@@ -346,6 +408,8 @@ function App() {
       SettingNAV: "Settings",
       LoadingMUS: "Loading",
       NothingMUS: "Music not selected",
+      SucLoadingMUS: "The file has been successfully uploaded",
+      SucDeleteMUS: "The file has been successfully deleted",
     },
   ];
   //
@@ -358,6 +422,9 @@ function App() {
       <div className="BurgenMenu" onClick={handleIsOpen}>
         ≡
       </div>
+      <div
+        className={`burgen_small_pr ${isOpen ? "burgen_small_pr_yes" : ""}`}
+      ></div>
       <NavMenu
         languageOptions={languageOptions[isLangIndex]}
         isOpen={isOpen}
@@ -367,6 +434,8 @@ function App() {
       ></NavMenu>
       {isMainMenu && (
         <MainMenu
+          isStyleChange={isStyleChange}
+          handleIsStyleChange={handleIsStyleChange}
           isMainMenu={isMainMenu}
           handleVolumeChange={handleVolumeChange}
           volume={volume}
@@ -394,7 +463,7 @@ function App() {
           getIndex={handleIndexClick}
           isOpen={isOpen}
           MUSIC_ARR={MUSIC_ARR}
-          currentIndex={isCurrentIndex}
+          currentIndex={isCurrentIndexRef.current}
           isPlaying={isPlaying}
           handleLengAudio={handleLengAudio}
           handleIsPlaying={handleIsPlaying}
@@ -404,6 +473,9 @@ function App() {
       )}
       {isMusic && (
         <Music
+          handleDeleteMusic={handleDeleteMusic}
+          playNextMusic={playNextMusic}
+          isMainMenu={isMainMenu}
           handleVolumeChange={handleVolumeChange}
           volume={volume}
           isRepeat={isRepeat}
@@ -425,7 +497,7 @@ function App() {
           isOpen={isOpen}
           MUSIC_ARR={MUSIC_ARR}
           getIndex={handleIndexClick}
-          currentIndex={isCurrentIndex}
+          currentIndex={isCurrentIndexRef.current}
           setMUSIC_ARR={updateMUSIC_ARR}
           isPlaying={isPlaying}
           isTimer={isTimer}

@@ -5,46 +5,35 @@ import PlayButton from "./navigation/PlayButton";
 import RightButton from "./navigation/RightButton";
 import Prev from "./navigation/Prev";
 import Leng from "./navigation/LenAudio";
-import React, { useState } from "react";
 import BackFon from "./BackFon";
-import BackFon2 from "./BackFon2";
 import RepeatSong from "./navigation/RepeatSong";
 import Volume from "./navigation/Volume";
 
 function MainMenu(props) {
   return (
     <div
-      className={`player ${props.isOpen ? "isOpenBurger" : "isCloseBurger"}`}
+      className={`player_menu ${
+        props.isOpen ? "isOpenBurger" : "isCloseBurger"
+      }`}
     >
-      {props.isPlay && !props.isLoading && (
-        <BackFon
-          isRectangle={props.isRectangle}
-          isImagine={props.isImagine}
-          isFullPage={props.isFullPage}
-        ></BackFon>
-      )}
-      {!props.isPlay && (
-        <BackFon2
-          isRectangle={props.isRectangle}
-          isImagine={props.isImagine}
-          isFullPage={props.isFullPage}
-        ></BackFon2>
-      )}
-      {!props.isLoading && (
-        <BackFon2
-          isRectangle={props.isRectangle}
-          isImagine={props.isImagine}
-          isFullPage={props.isFullPage}
-        ></BackFon2>
-      )}
+      <BackFon
+        isPlay={props.isPlay}
+        isLoading={props.isLoading}
+        isRectangle={props.isRectangle}
+        isImagine={props.isImagine}
+        isFullPage={props.isFullPage}
+      ></BackFon>
 
       <Prev
+        handleIsStyleChange={props.handleIsStyleChange}
         isRandom={props.isRand}
         isHandleRand={props.handleIsRand}
         isGif={props.isGif}
       ></Prev>
 
       <Leng
+        isMainMenu={props.isMainMenu}
+        isPlay={props.isPlay}
         languageOptions={props.languageOptions}
         isLoading={props.isLoading}
         isTimer={props.isTimer}
@@ -56,10 +45,9 @@ function MainMenu(props) {
         thisLeng={props.lengMusic}
         isPlaying={props.isPlaying}
       ></Leng>
-      <div className="pre_buttons">
+      <div className={`pre_buttons ${props.isPlay ? "opacityDown1" : ""}`}>
         <svg
           className="isLeft"
-          xmlns="http://www.w3.org/2000/svg"
           width="75"
           height="75"
           viewBox="0 0 24 24"
@@ -73,10 +61,12 @@ function MainMenu(props) {
         </svg>
         <div className="buttons">
           <RepeatSong
+            isMainMenu={props.isMainMenu}
             handleRepeat={props.handleRepeat}
             isRepeat={props.isRepeat}
           ></RepeatSong>
           <LeftButton
+            isMainMenu={props.isMainMenu}
             getIndex={props.getIndex}
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
@@ -84,6 +74,7 @@ function MainMenu(props) {
             setIsTimer={props.setIsTimer}
           ></LeftButton>
           <PlayButton
+            isMainMenu={props.isMainMenu}
             handleIsPlay={props.handleIsPlay}
             setIsTimer={props.setIsTimer}
             isRandom={props.handleIsRand}
@@ -94,6 +85,7 @@ function MainMenu(props) {
             isPlay={props.isPlay}
           ></PlayButton>
           <RightButton
+            isMainMenu={props.isMainMenu}
             getIndex={props.getIndex}
             handleIsPlaying={props.handleIsPlaying}
             currentIndex={props.currentIndex}
@@ -108,7 +100,6 @@ function MainMenu(props) {
         </div>
         <svg
           className="isRight"
-          xmlns="http://www.w3.org/2000/svg"
           width="75"
           height="75"
           viewBox="0 0 24 24"

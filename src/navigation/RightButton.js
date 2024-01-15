@@ -18,7 +18,7 @@ function RightButton(props) {
   const getNextIndex = () => {
     const currentIndex = props.currentIndex;
     const nextIndex = currentIndex + 1;
-    // Если достигнут конец массива, вернуть первый элемент
+    //Если достигнут конец массива, вернуть первый элемент
     if (nextIndex >= props.MUSIC_ARR.length) {
       return 0;
     }
@@ -28,14 +28,13 @@ function RightButton(props) {
 
   return (
     <div
-      className="right_button"
+      className={`${props.isMainMenu ? "right_button" : "right_buttonMUS"}`}
       onClick={() => {
         playNextMusic();
       }}
     >
       <svg
         className="right_button_icon"
-        xmlns="http://www.w3.org/2000/svg"
         width="50"
         height="50"
         viewBox="0 0 24 24"

@@ -5,14 +5,15 @@ function NavMenu(props) {
   return (
     <div
       className={`navigation ${props.isOpen ? "open_burger" : "close_burger"}`}
+      style={{
+        filter: props.isOpen
+          ? "drop-shadow(10px 0px 5px rgb(41, 235, 122))"
+          : "",
+      }}
     >
       <ul className="menu_tool">
         <li className="logotip"></li>
-        <li
-          className="this_list Home"
-          title="Главная страница"
-          onClick={props.isMainMenu}
-        >
+        <li className="this_list Home" onClick={props.isMainMenu}>
           <svg
             className="FixSvgMenu"
             viewBox="0 0 48 48"

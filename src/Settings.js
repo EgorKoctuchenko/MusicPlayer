@@ -1,19 +1,20 @@
 //Компонент настройки для настроек нашего плеера
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 function Settings(props) {
   const [sliderValue, setSliderValue] = useState(props.isRectangle);
 
-  // Обработчик изменения значения ползунка
+  //Обработчик изменения значения ползунка
   const handleSliderChange = (event) => {
     const newValue = event.target.value;
     setSliderValue(newValue);
     props.setRectangle(newValue);
     localStorage.setItem("isRectangle", JSON.stringify(newValue));
-    // Здесь вы можете выполнять другие действия в зависимости от значения ползунка
   };
-
+  //
+  //Сохраняем данные после перезагрузки страницы
+  //
   const handleIsImagineClick = () => {
     props.setImagine((prevImagine) => !prevImagine);
     localStorage.setItem("isImagine", JSON.stringify(!props.isImagine));
@@ -31,9 +32,15 @@ function Settings(props) {
     const currentLangIndex = props.isLangIndex;
     const newLangIndex = (currentLangIndex + 1) % 3;
     props.setLangIndex(newLangIndex);
-    localStorage.setItem("isLang", JSON.stringify(props.isLangIndex));
   };
+  useEffect(() => {
+    localStorage.setItem("isLangIndex", JSON.stringify(props.isLangIndex));
+  }, [props.isLangIndex]);
 
+  const handleResetSetting = () => {
+    localStorage.clear();
+    window.location.reload();
+  };
   return (
     <div
       className={`settings_page ${
@@ -54,7 +61,14 @@ function Settings(props) {
               }}
             >
               {props.isImagine && (
-                <svg x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30">
+                <svg
+                  x="0px"
+                  y="0px"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="rgb(219, 219, 219)"
+                >
                   <path d="M9 19.4L3.3 13.7 4.7 12.3 9 16.6 20.3 5.3 21.7 6.7z"></path>
                 </svg>
               )}
@@ -69,7 +83,14 @@ function Settings(props) {
               }}
             >
               {props.isFullPage && (
-                <svg x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30">
+                <svg
+                  x="0px"
+                  y="0px"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="rgb(219, 219, 219)"
+                >
                   <path d="M9 19.4L3.3 13.7 4.7 12.3 9 16.6 20.3 5.3 21.7 6.7z"></path>
                 </svg>
               )}
@@ -102,7 +123,14 @@ function Settings(props) {
               }}
             >
               {props.isGifAnim && (
-                <svg x="0px" y="0px" width="30" height="30" viewBox="0 0 30 30">
+                <svg
+                  x="0px"
+                  y="0px"
+                  width="30"
+                  height="30"
+                  viewBox="0 0 30 30"
+                  fill="rgb(219, 219, 219)"
+                >
                   <path d="M9 19.4L3.3 13.7 4.7 12.3 9 16.6 20.3 5.3 21.7 6.7z"></path>
                 </svg>
               )}
@@ -133,26 +161,55 @@ function Settings(props) {
                 </svg>
               )}
               {props.isLangIndex === 2 && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="30"
-                  height="30"
-                  viewBox="0 0 30 30"
-                >
-                  <rect width="30" height="6" y="0" fill="#012169" />
-                  <rect width="30" height="6" y="6" fill="#fff" />
-                  <rect width="30" height="6" y="12" fill="#bf0a30" />
-                  <rect width="30" height="6" y="18" fill="#fff" />
-                  <rect width="30" height="6" y="24" fill="#012169" />
-                  <rect width="12" height="30" x="9" fill="#bf0a30" />
-                  <rect width="6" height="30" x="15" fill="#fff" />
-                  <rect width="12" height="30" x="21" fill="#bf0a30" />
+                <svg width="30" height="30" viewBox="0 0 30 30">
+                  <rect width="30" height="30" y="0" fill="#012169" />
+                  <rect
+                    width="6"
+                    height="50"
+                    y="-10"
+                    x="12"
+                    fill="white"
+                    transform="rotate(45 15 15)"
+                  />
+                  <rect
+                    width="6"
+                    height="50"
+                    y="-10"
+                    x="12"
+                    fill="white"
+                    transform="rotate(-45 15 15)"
+                  />
+                  <rect
+                    width="2"
+                    height="50"
+                    y="-10"
+                    x="14"
+                    fill="red"
+                    transform="rotate(-45 15 15)"
+                  />
+                  <rect
+                    width="2"
+                    height="50"
+                    y="-10"
+                    x="14"
+                    fill="red"
+                    transform="rotate(45 15 15)"
+                  />
+                  <rect width="10" height="30" y="0" x="10" fill="white" />
+                  <rect width="30" height="10" y="10" x="0" fill="white" />
+                  <rect width="6" height="30" y="0" x="12" fill="red" />
+                  <rect width="30" height="6" y="12" x="0" fill="red" />
                 </svg>
               )}
             </div>
           </div>
         </div>
-        <div className="reset_button">
+        <div
+          className="reset_button"
+          onClick={() => {
+            handleResetSetting();
+          }}
+        >
           {props.languageOptions.RebootSetting}
         </div>
         <div className="version">

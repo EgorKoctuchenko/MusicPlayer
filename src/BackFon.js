@@ -1,22 +1,47 @@
 //Компонент для визуализации заднего фона (прыгающих прямоугольников)
 import "./App.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 function BackFon(props) {
+  //
+  //Применение мгновенных изменений при помощи useEffect и useRef
+  //
+  //Для isPlay
+  //
+  const isPlayRef = useRef(props.isPlay);
+  useEffect(() => {
+    isPlayRef.current = props.isPlay;
+  }, [props.isPlay]);
+  //
+  //Для isLoading
+  //
+  const isLoadingRef = useRef(props.isLoading);
+  useEffect(() => {
+    isLoadingRef.current = props.isLoading;
+  }, [props.isLoading]);
+  //
+  //
+  //
   useEffect(() => {
     if (props.isImagine) {
       const listItems = document.querySelectorAll(".this_column_back");
+
       const updateHeight = () => {
         listItems.forEach((item) => {
-          const newHeight = randomHeight();
-          item.style.transition = "0s";
-          item.style.height = `${newHeight}%`;
+          if (isPlayRef.current && !isLoadingRef.current) {
+            const newHeight = randomHeight();
+            item.style.transition = "0s";
+            item.style.height = `${newHeight}%`;
 
-          setTimeout(() => {
-            const transitionDuration = (parseFloat(newHeight) / 1000) * 8;
-            item.style.transition = `${transitionDuration}s`;
+            setTimeout(() => {
+              const transitionDuration = (parseFloat(newHeight) / 1000) * 8;
+              item.style.transition = `${transitionDuration + 0.15}s`;
+              item.style.height = "1.5%";
+            }, 10);
+          } else {
+            item.style.transition = `0.4s`;
             item.style.height = "1.5%";
-          }, 10);
+          }
         });
 
         //Запускаем функцию обновления высоты через 250мс
@@ -26,10 +51,10 @@ function BackFon(props) {
       //Запускаем функцию обновления высоты
       updateHeight();
 
-      // чистка таймера при размонтировании компонента
+      //Чистка таймера при размонтировании компонента
       return () => clearTimeout();
     }
-  }, []); //Пустой массив зависимостей, чтобы useEffect выполнился только один раз при монтировании компонента
+  }, [props.isPlay]); //Пустой массив зависимостей, чтобы useEffect выполнился только один раз при монтировании компонента
 
   //Рандомное число от 15 до 100 (% высоты)
   const randomHeight = () => {

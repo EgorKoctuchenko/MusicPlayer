@@ -18,7 +18,7 @@ function LeftButton(props) {
   const getNextIndex = () => {
     const currentIndex = props.currentIndex;
     const nextIndex = currentIndex - 1;
-    // Если достигнуто начало массива, вернуть последний элемент
+    //Если достигнуто начало массива, вернуть последний элемент
     if (nextIndex < 0) {
       return props.MUSIC_ARR.length - 1;
     }
@@ -28,14 +28,13 @@ function LeftButton(props) {
 
   return (
     <div
-      className="left_button"
+      className={`${props.isMainMenu ? "left_button" : "left_buttonMUS"}`}
       onClick={() => {
         playPrevMusic();
       }}
     >
       <svg
         className="left_button_icon"
-        xmlns="http://www.w3.org/2000/svg"
         width="50"
         height="50"
         viewBox="0 0 24 24"

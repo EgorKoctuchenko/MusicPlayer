@@ -1,9 +1,11 @@
 //Компонент для регуляторности звука
+import "../App.css";
 import React, { useState, useEffect } from "react";
 
 function Volume(props) {
   const [volumeIcon, setVolumeIcon] = useState(
     <svg
+      className={`${props.isMainMenu ? "volume_icon" : "volume_iconMUS"}`}
       fill="#000000"
       height="40px"
       width="40px"
@@ -42,6 +44,7 @@ function Volume(props) {
     if (props.volume >= 0.7)
       setVolumeIcon(
         <svg
+          className={`${props.isMainMenu ? "volume_icon" : "volume_iconMUS"}`}
           fill="#000000"
           height="40px"
           width="40px"
@@ -76,6 +79,7 @@ function Volume(props) {
     else if (props.volume >= 0.3) {
       setVolumeIcon(
         <svg
+          className={`${props.isMainMenu ? "volume_icon" : "volume_iconMUS"}`}
           fill="#000000"
           height="40px"
           width="40px"
@@ -102,6 +106,7 @@ function Volume(props) {
     } else if (props.volume >= 0.05) {
       setVolumeIcon(
         <svg
+          className={`${props.isMainMenu ? "volume_icon" : "volume_iconMUS"}`}
           fill="#000000"
           height="40px"
           width="40px"
@@ -120,11 +125,11 @@ function Volume(props) {
     } else {
       setVolumeIcon(
         <svg
+          className={`${props.isMainMenu ? "volume_icon" : "volume_iconMUS"}`}
           fill="#000000"
           height="40px"
           width="40px"
           viewBox="0 0 512.002 512.002"
-          xmlns="http://www.w3.org/2000/svg"
         >
           <g>
             <g>
@@ -163,7 +168,7 @@ function Volume(props) {
 
   return (
     <div
-      className="volume_line"
+      className={`${props.isMainMenu ? "volume_line" : "volume_lineMUS"}`}
       onClick={props.handleRepeat}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -176,6 +181,7 @@ function Volume(props) {
           }`}
         >
           <input
+            className="input_volume"
             type="range"
             min="0"
             max="1"

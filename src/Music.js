@@ -5,18 +5,20 @@ import LeftButton from "./navigation/LeftButton";
 import PlayButton from "./navigation/PlayButton";
 import RightButton from "./navigation/RightButton";
 import Leng from "./navigation/LenAudio";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import ErrorPop from "./navigation/popup/ErrorPop";
 import RepeatSong from "./navigation/RepeatSong";
 import Volume from "./navigation/Volume";
 
 //
 //В качестве базы данных - используется DropBox
+//Замените на ваш токен, дабы подключиться к вашему dropbox и слушать музыку.
+//Токен сделан не статическим, дабы избежать проблем.
 //
 const dbx = new Dropbox({
   accessToken:
-    "sl.BtXLiC4IzFEl-zIMB3p9QjWs64rxjyIfDejJBCow42_LAGS0-DxmKkuAvX3g2cprOOoX3PskWkv4DIbnlWVGi2o5vUCCqdDcCsU6rQg409Dg0Z7gqtIZ3RGT0n30Dk1nRzwrEljd79FT", // Замените на ваш ключ доступа
+    //Замените на ваш ключ доступа
+    "",
 });
 
 function Music(props) {
@@ -24,6 +26,10 @@ function Music(props) {
   //Отслеживание состояния загрузки музыки ИЗ DropBox
   //
   const [loadingDropboxMusic, setLoadingDropboxMusic] = useState(false);
+  //
+  //Сообщение для удаления
+  //
+  const [deleteDropboxMusic, isDeleteDropboxMusic] = useState(false);
   //
   //Отслеживание состояния загрузки музыки В DropBox
   //
@@ -71,7 +77,7 @@ function Music(props) {
 
           //В массив, запихиваем ВСЕ НЕОБХОДИМЫЕ данные
           newMusicArr.push({
-            name: file.name.replace(/\.mp3$/, ""), //Регулярные выражения, для того,
+            name: file.name, //Регулярные выражения, для того,
             //чтобы убрать ".mp3", которые присущи всем mp3 файлам. Пока что, только mp3.
             file: blobUrl,
             duration: 0,
@@ -127,7 +133,6 @@ function Music(props) {
             contents: file,
           });
 
-          console.log("File uploaded to Dropbox:", response);
           setStatusUpload(true);
           //Сразу же, добавляем эту музыку в наш список (вызовя функцию)
           await handleAddMusicFromDropbox();
@@ -138,9 +143,9 @@ function Music(props) {
       fileInput.addEventListener("change", handleChange);
       //Вызываем click после добавления обработчика
       fileInput.click();
-      // Возвращаем Promise
+      //Возвращаем Promise
       return new Promise((resolve) => {
-        // Добавляем resolve после вызова click
+        //Добавляем resolve после вызова click
         resolve();
       });
     } catch (error) {
@@ -158,6 +163,36 @@ function Music(props) {
       setLoadingDropboxMusic(false);
     }
   };
+  //Удаление музыки
+  const handleDeleteMusicFromDropbox = async (name_au) => {
+    const path = `/music/${name_au}`;
+    try {
+      isDeleteDropboxMusic(true);
+      setLoadingDropboxMusic(true);
+
+      //Вызываем метод filesDeleteV2 для удаления файла
+      const response = await dbx.filesDeleteV2({ path });
+      props.handleDeleteMusic();
+
+      //Обновляем состояние компонента, например, удаляем музыку из массива
+      await handleAddMusicFromDropbox();
+    } catch (error) {
+      console.error("Error deleting music from Dropbox:", error);
+
+      if (error.response) {
+        console.error("Dropbox API error:", error.response);
+        props.setInfoError("Dropbox API error: " + error.response);
+        props.setGettingError(true);
+      } else {
+        console.error("Unexpected error format:", error);
+        props.setInfoError("Unexpected error format: " + error);
+        props.setGettingError(true);
+      }
+    } finally {
+      setLoadingDropboxMusic(false);
+      isDeleteDropboxMusic(false);
+    }
+  };
 
   return (
     <div
@@ -171,6 +206,7 @@ function Music(props) {
       )}
       <div className="upcase">
         <Leng
+          isMainMenu={props.isMainMenu}
           isRepeat={props.isRepeat}
           languageOptions={props.languageOptions}
           isLoading={props.isLoading}
@@ -228,24 +264,59 @@ function Music(props) {
             key={index}
             onClick={() => {
               props.getIndex(index);
-              props.setIsTimer(true);
-              console.log(props.currentIndex);
+              {
+                index !== props.currentIndex
+                  ? props.setIsTimer(true)
+                  : props.setIsTimer(false);
+              }
             }}
           >
             <span>{music.name}</span>
-            <a
-              href={music.file}
-              download={music.name} // Устанавливаем имя файла для скачивания
-              style={{ marginLeft: "10px" }}
-            >
-              Скачать
-            </a>
+            <div>
+              <a
+                className="IndexUping"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleDeleteMusicFromDropbox(music.name);
+                }}
+              >
+                <svg
+                  className="delete_icon"
+                  viewBox="0 0 24 19"
+                  width="26"
+                  height="26"
+                  fill="red"
+                  stroke="red"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </a>
+              <a
+                className="IndexUping"
+                href={music.file}
+                download={music.name}
+                style={{ marginLeft: "10px" }}
+              >
+                <svg width="26px" height="26px" viewBox="0 0 24 20" fill="none">
+                  <path
+                    d="M5.25589 16C3.8899 15.0291 3 13.4422 3 11.6493C3 9.20008 4.8 6.9375 7.5 6.5C8.34694 4.48637 10.3514 3 12.6893 3C15.684 3 18.1317 5.32251 18.3 8.25C19.8893 8.94488 21 10.6503 21 12.4969C21 14.0582 20.206 15.4339 19 16.2417M12 21V11M12 21L9 18M12 21L15 18"
+                    stroke="#000000"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </a>
+            </div>
           </div>
         ))}
       </div>
       <div className="addmusic" onClick={handleAddMusicFromDropbox}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           width="75"
           height="75"
           viewBox="0 0 24 24"
@@ -264,17 +335,17 @@ function Music(props) {
           statusUpload === true ? "text_app" : "text_rem"
         }`}
       >
-        Файл успешно загружен
+        {props.languageOptions.SucLoadingMUS}
+      </div>
+      <div
+        className={`text_yes ${
+          deleteDropboxMusic === true ? "text_app" : "text_rem"
+        }`}
+      >
+        {props.languageOptions.SucDeleteMUS}
       </div>
       <div className="upload" onClick={handleUploadMusicToDropbox}>
-        <svg
-          fill="#000000"
-          width="75"
-          height="75"
-          viewBox="0 0 512 512"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <title>ionicons-v5-f</title>
+        <svg fill="#000000" width="75" height="75" viewBox="0 0 512 512">
           <path d="M473.66,210c-16.56-12.3-37.7-20.75-59.52-24-6.62-39.18-24.21-72.67-51.3-97.45C334.15,62.25,296.21,47.79,256,47.79c-35.35,0-68,11.08-94.37,32.05a149.61,149.61,0,0,0-45.32,60.49c-29.94,4.6-57.12,16.68-77.39,34.55C13.46,197.33,0,227.24,0,261.39c0,34.52,14.49,66,40.79,88.76,25.12,21.69,58.94,33.64,95.21,33.64H240V230.42l-48,48-22.63-22.63L256,169.17l86.63,86.62L320,278.42l-48-48V383.79H396c31.34,0,59.91-8.8,80.45-24.77,23.26-18.1,35.55-44,35.55-74.83C512,254.25,498.74,228.58,473.66,210Z" />
           <rect x="240" y="383.79" width="32" height="80.41" />
         </svg>
