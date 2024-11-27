@@ -1,0 +1,51 @@
+///
+en
+///
+To set up your token, you need to follow a few steps:
+1) Go to the following link: https://www.dropbox.com/developers
+2) Click "Application Console"
+3) Create a new application (the creation process is very simple, I think it is not necessary to explain). 
+4) After creation, go to the created project and go to the "Permissions" tab.
+5) Check the following items: files.metadata.write, files.content.write, files.content.read.
+6) Go back to "Settings".
+7) Search for "Token generation" and click "Generate" button.
+8) Copy the token and paste it into the Music.js component (you can find where to paste it there).
+9) Enjoy the music ^-^
+
+(Note: The token will not be eternal, it will be available for some time, about 5-6 hours. Unfortunately, I don't have a full-fledged server where I could
+deploy the application and use something different but for all users. However, thanks, if you do decide to evaluate and give advice on my first
+project that works through a dropbox database! I want to further develop this project, and maybe in the future, it will be a Spotify-level project \|^-^|/))
+///
+ua
+///
+Для встановлення свого токена, вам необхідно виконати кілька дій:
+1) Переходимо за посиланням: https://www.dropbox.com/developers
+2) Натискаємо "Консоль додатка"
+3) Створюємо новий додаток (процес створення дуже простий, думаю пояснювати не варто) 
+4) Після створення, заходимо в створений проект і переходимо у вкладку "Дозволи"
+5) Ставимо галочки на такі пункти: files.metadata.write, files.content.write, files.content.read
+6) Повертаємося в "Налаштування"
+7) Шукаємо "Генерація токена" і натискаємо кнопку "Генерувати"
+8) Копіюємо токен і вставляємо його в компонент Music.js (там, можна буде знайти куди саме вставляти)
+9) Насолоджуємося музикою ^-^^
+
+(Примітка: Токен не буде вічний, він буде доступний деякий час, приблизно, 5-6 годин. На жаль, у мене немає повноцінного сервера, де я б міг
+розгорнути додаток і використовувати щось інше але для всіх користувачів. Однак, дякую, якщо ж ви вирішите оцінити і дати поради моєму першому
+проекту, який працює через базу даних у вигляді dropbox! Я хочу й надалі розвивати цей проєкт, і можливо, в майбутньому, це буде проєкт на рівні Spotify \|^-^^|/))
+///
+ru
+///
+Для установления своего токена, вам необходимо выполнить несколько действий:
+1) Переходим по ссылке: https://www.dropbox.com/developers
+2) Нажимаем "Консоль приложения"
+3) Создаем новое приложение (процесс создания очень прост, думаю объяснять не стоит) 
+4) После создания, заходим в созданный проект и переходим во вкладку "Разрешения"
+5) Ставим галоки на следующие пункты: files.metadata.write, files.content.write, files.content.read
+6) Возвращаемся в "Настройки"
+7) Ищем "Генерация токена" и нажимаем кнопку "Генерировать"
+8) Копируем токен и вставляем его в компонент Music.js (там, можно будет найти куда именно вставлять)
+9) Наслаждаемся музыкой ^-^
+
+(Примичание: Токен не будет вечный, он будет доступный некоторое время, примерно, 5-6 часов. К сожаленью, у меня нет полноценного сервера, где я бы мог
+развернуть приложение и использовать что-то другое но для всех пользователей. Однако, спасибо, если же вы решите оценить и дать советы моему первому
+проекту, который работает через базу данных в виде dropbox! Я хочу и дальше развивать этот проект, и возможно, в будущем, это будет проект на уровне Spotify \|^-^|/)
