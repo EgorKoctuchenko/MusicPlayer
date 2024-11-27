@@ -1,4 +1,3 @@
-//Компонент для повторения одного и того же трека
 import "../App.css";
 
 function RepeatSong(props) {

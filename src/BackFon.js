@@ -1,26 +1,16 @@
-//Компонент для визуализации заднего фона (прыгающих прямоугольников)
 import "./App.css";
 import React, { useEffect, useRef } from "react";
 
 function BackFon(props) {
-  //
-  //Применение мгновенных изменений при помощи useEffect и useRef
-  //
-  //Для isPlay
-  //
   const isPlayRef = useRef(props.isPlay);
   useEffect(() => {
     isPlayRef.current = props.isPlay;
   }, [props.isPlay]);
   //
-  //Для isLoading
-  //
   const isLoadingRef = useRef(props.isLoading);
   useEffect(() => {
     isLoadingRef.current = props.isLoading;
   }, [props.isLoading]);
-  //
-  //
   //
   useEffect(() => {
     if (props.isImagine) {
@@ -43,20 +33,13 @@ function BackFon(props) {
             item.style.height = "1.5%";
           }
         });
-
-        //Запускаем функцию обновления высоты через 250мс
         setTimeout(updateHeight, 250);
       };
-
-      //Запускаем функцию обновления высоты
       updateHeight();
-
-      //Чистка таймера при размонтировании компонента
       return () => clearTimeout();
     }
-  }, [props.isPlay]); //Пустой массив зависимостей, чтобы useEffect выполнился только один раз при монтировании компонента
+  }, [props.isPlay]);
 
-  //Рандомное число от 15 до 100 (% высоты)
   const randomHeight = () => {
     if (props.isFullPage) {
       return Math.floor(Math.random() * 86) + 15;

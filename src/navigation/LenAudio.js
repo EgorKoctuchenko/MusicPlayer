@@ -1,9 +1,6 @@
-//Компонент, для: Продолжительности трека, нынешней длины, общей длины и прочее
 import React, { useEffect, useState } from "react";
 
 function LenAudio(props) {
-  //
-  //Сразу же инициализация нужных состояний
   //
   const [percentTime, setPercentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
@@ -17,8 +14,6 @@ function LenAudio(props) {
       setNameMus(props.languageOptions.NothingMUS);
     }
   }, [props.isMainMenu]);
-  //
-  //Хук, для обнуления всех данных при загрузке
   //
   useEffect(() => {
     if (props.isTimer) {
@@ -34,23 +29,21 @@ function LenAudio(props) {
     }
   }, [props.curLen, props.isTimer, props.isLoading]);
   //
-  //Хук, для отображение Loading с указанным кол-во точек при загрузке музыки
-  //Добавил, потому что показалось интересным :)
-  //
+
   useEffect(() => {
     if (props.isLoading && props.currentIndex !== -1) {
       const intervalDot = setInterval(() => {
         setNameMus(props.languageOptions.LoadingMUS + ".".repeat(dotCo));
         setDotCo((prevDot) => (prevDot === 3 ? 0 : ++prevDot));
       }, 350);
-      return () => clearInterval(intervalDot); //Очищаем интервал при размонтировании или изменении зависимостей
+      return () => clearInterval(intervalDot);
     }
   }, [dotCo, props.isLoading, props.currentIndex]);
   //
-  //Хук, для работы с циклом, который каждые 1000мс будет давать +1 секунду с момента
-  //начала музыки. Здесь, установлено на 100мс, поскольку пользователь может нажать на паузу,
-  //и тогда таймер будет не очень корректным. Поэтому, для уменьшения погрешности - используется
-  //значение 100. Также, получаем значение названия трека
+  //Хук що використовувася для роботи з циклом, який кожні 1000мс даватиме +1 секунду з
+  //моменту початку музики. Тут, встановлено на 100мс, оскільки користувач може
+  //натиснути на паузу, і тоді таймер буде не дуже коректним. Тому, для зменшення
+  //похибки - використовується значення 100.
   //
   useEffect(() => {
     if (props.isPlaying && !props.isLoading) {
@@ -74,14 +67,10 @@ function LenAudio(props) {
   ]);
 
   //
-  //Хук, для обновления percentTime при изменении curLen или totalTime
-  //
+
   useEffect(() => {
     setPercentTime((props.curLen / totalTime) * 111);
   }, [props.curLen, totalTime]);
-  //
-  //Хук, который работает, если же значение индекс !== -1. Также, здесь
-  //устанавливается длина трека
   //
   useEffect(() => {
     if (props.currentIndex !== -1) {
@@ -89,20 +78,17 @@ function LenAudio(props) {
     }
   }, [props.currentIndex, props.thisLeng]);
   //
-  //Правильные значения для таймеров
-  //
+
   const formattedCurLen = formatTime(props.curLen);
   const formattedTotalTime = formatTime(totalTime);
   //
-  //Стили для current_leng
-  //
+
   const currentLengStyles = {
     width: `${percentTime}%`,
     transition: `0.1s linear`,
   };
   //
-  //Функция форматирования времени (в привычном 00:00 формате)
-  //
+
   function formatTime(seconds) {
     const min = Math.floor(seconds / 60);
     const sec = Math.floor(seconds % 60);

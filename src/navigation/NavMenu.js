@@ -1,4 +1,3 @@
-//Компонент бургер меню
 import "../App.css";
 
 function NavMenu(props) {

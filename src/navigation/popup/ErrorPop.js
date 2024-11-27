@@ -1,4 +1,3 @@
-//Компонент, для popup ошибки
 import "../../App.css";
 
 function ErrorPop(props) {

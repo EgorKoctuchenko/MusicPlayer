@@ -1,4 +1,3 @@
-//Компонент, служащий для музыки, работы с ней, а также выбора музыки
 import { Dropbox } from "dropbox";
 import "./App.css";
 import LeftButton from "./navigation/LeftButton";
@@ -11,37 +10,30 @@ import RepeatSong from "./navigation/RepeatSong";
 import Volume from "./navigation/Volume";
 
 //
-//В качестве базы данных - используется DropBox
-//Замените на ваш токен, дабы подключиться к вашему dropbox и слушать музыку.
-//Токен сделан не статическим, дабы избежать проблем.
+//В якості бази даних - використовується DropBox
+//Замініть на ваш токен, щоб підключитися до вашого dropbox і слухати музику.
+//Токен зроблений не статичним, щоб уникнути проблем.
+//
+//На той час, на жаль, я ще не знав, як можна було зробити по іншому
+//Проте, змінювати не стану, мені приємно бачити, що я знайшов рішення тоді :)
 //
 const dbx = new Dropbox({
   accessToken:
-    //Замените на ваш ключ доступа
+    //Замініть на ваш ключ доступу
     "",
 });
 
 function Music(props) {
   //
-  //Отслеживание состояния загрузки музыки ИЗ DropBox
-  //
   const [loadingDropboxMusic, setLoadingDropboxMusic] = useState(false);
-  //
-  //Сообщение для удаления
   //
   const [deleteDropboxMusic, isDeleteDropboxMusic] = useState(false);
   //
-  //Отслеживание состояния загрузки музыки В DropBox
-  //
   const [statusUpload, setStatusUpload] = useState(false);
-  //
-  //Из DropBox
   //
   const handleAddMusicFromDropbox = async () => {
     try {
       setLoadingDropboxMusic(true);
-      //
-      //Ждем выполнения загрузки всех музыки из папки music. Используется await для ожидания
       //
       const response = await dbx.filesListFolder({ path: "/music" });
 
@@ -54,31 +46,20 @@ function Music(props) {
         return;
       }
       //
-      //Фильтрация полученных данных, поскольку, нам нужны лишь файлы
-      //
       const musicFiles = response.result.entries.filter(
         (entry) => entry[".tag"] === "file"
       );
-      const newMusicArr = []; //Массив музык (временный)
-      //
-      //Сохраняем ВСЕ файлы, которые были полученны из dropbox
+      const newMusicArr = [];
       //
       for (const file of musicFiles) {
         try {
           //
-          //Пытаемся получить временную ссылку, для дальнейших манипуляций
-          //
           const temporaryLink = await dbx.filesGetTemporaryLink({
             path: file.path_display,
           });
-
-          //Присваиваем blobUrl значение временной ссылки
           const blobUrl = temporaryLink.result.link;
-
-          //В массив, запихиваем ВСЕ НЕОБХОДИМЫЕ данные
           newMusicArr.push({
-            name: file.name, //Регулярные выражения, для того,
-            //чтобы убрать ".mp3", которые присущи всем mp3 файлам. Пока что, только mp3.
+            name: file.name,
             file: blobUrl,
             duration: 0,
             index: newMusicArr.length,
@@ -91,8 +72,6 @@ function Music(props) {
           props.setGettingError(true);
         }
       }
-      //
-      //Обновляем состояние компонента и добавляем музыку из Dropbox в массив
       //
       props.setMUSIC_ARR(() => {
         const updatedMusicArr = [...newMusicArr.filter(Boolean)];
@@ -113,39 +92,29 @@ function Music(props) {
       setLoadingDropboxMusic(false);
     }
   };
-  ///
-  //Загрузка музыки в DROPBOX
-  ///
+  //
   const handleUploadMusicToDropbox = async () => {
     try {
       setLoadingDropboxMusic(true);
-      //Требование, чтобы был загружен файл, а не что-либо другое
       const fileInput = document.createElement("input");
       fileInput.type = "file";
-      //Обработчик события change
       const handleChange = async (event) => {
         const file = event.target.files[0];
 
         if (file) {
-          //Асинхронная загрузка файла, в указанное место и указанный тип (файл)
           const response = await dbx.filesUpload({
             path: `/music/${file.name}`,
             contents: file,
           });
 
           setStatusUpload(true);
-          //Сразу же, добавляем эту музыку в наш список (вызовя функцию)
           await handleAddMusicFromDropbox();
           setStatusUpload(false);
         }
       };
-      //Добавляем обработчик change
       fileInput.addEventListener("change", handleChange);
-      //Вызываем click после добавления обработчика
       fileInput.click();
-      //Возвращаем Promise
       return new Promise((resolve) => {
-        //Добавляем resolve после вызова click
         resolve();
       });
     } catch (error) {
@@ -163,18 +132,14 @@ function Music(props) {
       setLoadingDropboxMusic(false);
     }
   };
-  //Удаление музыки
+  //
   const handleDeleteMusicFromDropbox = async (name_au) => {
     const path = `/music/${name_au}`;
     try {
       isDeleteDropboxMusic(true);
       setLoadingDropboxMusic(true);
-
-      //Вызываем метод filesDeleteV2 для удаления файла
       const response = await dbx.filesDeleteV2({ path });
       props.handleDeleteMusic();
-
-      //Обновляем состояние компонента, например, удаляем музыку из массива
       await handleAddMusicFromDropbox();
     } catch (error) {
       console.error("Error deleting music from Dropbox:", error);

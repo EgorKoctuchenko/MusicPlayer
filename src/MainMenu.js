@@ -1,4 +1,3 @@
-//Этот компонент служит для страницы с гиф а также небольшой визуализацией
 import "./App.css";
 import LeftButton from "./navigation/LeftButton";
 import PlayButton from "./navigation/PlayButton";

@@ -1,19 +1,15 @@
-//Компонент настройки для настроек нашего плеера
 import "./App.css";
 import React, { useEffect, useState } from "react";
 
 function Settings(props) {
   const [sliderValue, setSliderValue] = useState(props.isRectangle);
 
-  //Обработчик изменения значения ползунка
   const handleSliderChange = (event) => {
     const newValue = event.target.value;
     setSliderValue(newValue);
     props.setRectangle(newValue);
     localStorage.setItem("isRectangle", JSON.stringify(newValue));
   };
-  //
-  //Сохраняем данные после перезагрузки страницы
   //
   const handleIsImagineClick = () => {
     props.setImagine((prevImagine) => !prevImagine);

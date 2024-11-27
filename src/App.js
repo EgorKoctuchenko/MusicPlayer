@@ -1,5 +1,3 @@
-//Этот компонент есть родителем для всех остальных компонентов.
-
 import "./App.css";
 import "./MainMenu";
 import MainMenu from "./MainMenu";
@@ -11,28 +9,21 @@ import { Howl } from "howler";
 
 function App() {
   //
-  //В случае, если же была получена ошибка
-  //
+
   const [infoError, setInfoError] = useState("Ошибок нет");
   const [gettingError, setGettingError] = useState(false);
   const handleGettingError = () => {
     setGettingError((prevError) => !prevError);
   };
   //
-  //localStorage.clear();
-  //
-  //Состояние для управление музыкой
+  //localStorage.clear(); <- використовувалося для перевірки з localStorage параметрами
   //
   const [isPlaying, setIsPlaying] = useState(false);
-  //
-  //Массив музык а также состояние
   //
   const [MUSIC_ARR, setMUSIC_ARR] = useState([]);
   const updateMUSIC_ARR = (newMusicArr) => {
     setMUSIC_ARR(newMusicArr);
   };
-  //
-  //Для бургер меню
   //
   const [isOpen, setIsOpen] = useState(true);
   function handleIsOpen() {
@@ -42,8 +33,6 @@ function App() {
       setIsOpen(true);
     }
   }
-  //
-  //Для главной страницы
   //
   const [isMainMenu, setMainMenu] = useState(() => {
     const savedValue = localStorage.getItem("isMainMenu");
@@ -55,8 +44,6 @@ function App() {
     setSet(false);
   }
   //
-  //Для музыки (листа музыки)
-  //
   const [isMusic, setMusic] = useState(() => {
     const savedValue = localStorage.getItem("isMusic");
     return savedValue ? JSON.parse(savedValue) : false;
@@ -66,8 +53,6 @@ function App() {
     setMusic(true);
     setSet(false);
   }
-  //
-  //Для настроек
   //
   const [isSet, setSet] = useState(() => {
     const savedValue = localStorage.getItem("isSetting");
@@ -79,40 +64,36 @@ function App() {
     setSet(true);
   }
   //
-  //Правильное отображение страницы ПОСЛЕ перезапуска страницы
-  //
   useEffect(() => {
     localStorage.setItem("isMainMenu", isMainMenu);
     localStorage.setItem("isMusic", isMusic);
     localStorage.setItem("isSetting", isSet);
   }, [isMainMenu, isMusic, isSet]);
-  //Для отображения количество прямоугольников (по дефолту - 100)
+  //
   const [isRectangle, setRectangle] = useState(() => {
     const savedValue = localStorage.getItem("isRectangle");
     return savedValue ? JSON.parse(savedValue) : 100;
   });
-  //Для отображения визуализации музыки (по дефолту - true)
+  //
   const [isImagine, setImagine] = useState(() => {
     const savedValue = localStorage.getItem("isImagine");
     return savedValue ? JSON.parse(savedValue) : true;
   });
-  //Для отображения (на всю или не на всю страницу) (по дефолту - true)
+  //
   const [isFullPage, setFullPage] = useState(() => {
     const savedValue = localStorage.getItem("isFullPage");
     return savedValue ? JSON.parse(savedValue) : true;
   });
-  //Для отображения gif (по дефолту - true)
+  //
   const [isGifAnim, setGifAnim] = useState(() => {
     const savedValue = localStorage.getItem("isGifAnim");
     return savedValue ? JSON.parse(savedValue) : true;
   });
-  //Для отображения языка (по дефолту - украинский)
+  //
   const [isLangIndex, setLangIndex] = useState(() => {
     const savedValue = localStorage.getItem("isLangIndex");
     return savedValue ? JSON.parse(savedValue) : 0;
   });
-  //
-  //Получение индекса
   //
   const [isCurrentIndex, setCurrentIndex] = useState(-1);
   const handleIndexClick = (index) => {
@@ -122,40 +103,28 @@ function App() {
   useEffect(() => {
     isCurrentIndexRef.current = isCurrentIndex;
   }, [isCurrentIndex]);
-  /////
-  //curLen - нужен для определения ТЕКУЩЕЙ длины трека (с момента начала).
-  /////
+  //
   const [curLen, setCurLen] = useState(0);
-  /////
-  //isTimer необходим для обнулений параметров в компоненте LenAudio
-  /////
+  //
   const [isTimer, setIsTimer] = useState(false);
-  /////
-  //Воспроизведение следующей музыки, в случае, если же музыка была завершена естественным путем
-  //(Ну то есть, дослушанна до конца)
-  /////
+  //
   const playNextMusic = () => {
     const nextIndex = getNextIndex();
     setIsPlay(false);
     setIsTimer(true);
     if (sound.current) {
-      sound.current.stop(); //Остановить предыдущую музыку
+      sound.current.stop();
     }
-    //Остановить воспроизведение перед переключением
-    handleIndexClick(nextIndex); //Установить новый индекс
+    handleIndexClick(nextIndex);
   };
   const playAgainMusic = () => {
     sound.current.seek(0);
     sound.current.play();
   };
-  /////
-  //Получение следующего индекса для воспроизведения следующей музыки
-  /////
+  //
   const getNextIndex = () => {
     const currentIndex = isCurrentIndex;
     const nextIndex = currentIndex + 1;
-
-    //Если достигнут конец массива, вернуть первый элемент/индекс (loop)
     if (nextIndex >= MUSIC_ARR.length) {
       return 0;
     }
@@ -163,11 +132,7 @@ function App() {
     return nextIndex;
   };
   //
-  //Статус загрузки музыка
-  //
   const [isLoading, setIsLoading] = useState(false);
-  //
-  //Хук для загрузки музыки (инициализации)
   //
   useEffect(() => {
     initializeSound();
@@ -178,12 +143,7 @@ function App() {
     };
   }, [isCurrentIndex]);
   //
-  //Функция проигрывания звука
-  //
   const handleIsPlay = () => {
-    //Если же музыка НЕ загружается, то устанавливаем некоторые правила для воспроизведения музыки
-    //(handleIsPlaying, или же проигрывание или стоп музыки).
-    //
     if (!isLoading) {
       setIsPlay((prevIsPlay) => !prevIsPlay);
 
@@ -201,8 +161,6 @@ function App() {
     }
   };
   //
-  //Для повторения трека
-  //
   const [isRepeat, setRepeat] = useState(() => {
     const savedValue = localStorage.getItem("isRepeat");
     return savedValue ? JSON.parse(savedValue) : false;
@@ -215,10 +173,6 @@ function App() {
     isRepeatRef.current = isRepeat;
   }, [isRepeat]);
   //
-  //Функция, для правильного установления значения setIsPlaying
-  //(Да, можно было проще как вверху сделать, но пусть уже так. О верхней записи
-  //Узнал я позже :D)
-  //
   const handleIsPlaying = (PlayStatus2) => {
     if (PlayStatus2) {
       setIsPlaying(true);
@@ -227,36 +181,26 @@ function App() {
     }
   };
   //
-  //Рандомное число (для гифки)
-  //
   const [isRand, setIsRand] = useState(false);
   const handleIsRand = () => {
     isRand ? setIsRand(false) : setIsRand(true);
   };
   //
-  //Число для определения стилей (динамично). БУДУЩАЯ ИДЕЯ!!
+  //Число для визначення стилів (динамічно). Ще не реалізовано
   //
   const [isStyleChange, setStyleChange] = useState(false);
   const handleIsStyleChange = (value) => {
     setStyleChange(value);
   };
   //
-  //Рандомное число (для гифки)
-  //
   const [isPlay, setIsPlay] = useState(true);
-  //
-  //Определение длины музыки (изначально - 0)
   //
   const [lengMusic, setLengMusic] = useState(0);
   const handleLengAudio = (thisLeng) => {
     setLengMusic(thisLeng);
   };
   //
-  //Иницилизируем sound, при помощи хука useRef (изначально null)
-  //
   const sound = useRef(null);
-  //
-  //Громкость музыки
   //
   const [volume, setVolume] = useState(() => {
     const savedValue = localStorage.getItem("isVolume");
@@ -271,26 +215,19 @@ function App() {
     }
   };
   //
-  //Переменная, имеющая значение нынешнего трека
-  //
   const currentMusic = MUSIC_ARR[isCurrentIndex];
-  //
-  //Функция инициализации музыки. Была перемещена из компонента PlayButton дабы
-  //устронить баг
   //
   const initializeSound = () => {
     if (sound.current && sound.current.playing()) {
-      sound.current.stop(); //Останавливаем предыдущий звук
-      sound.current.unload(); //Освобождаем ресурсы
+      sound.current.stop();
+      sound.current.unload();
     }
     if (currentMusic && currentMusic.file) {
       sound.current = new Howl({
-        //Объект Howl
-        src: [currentMusic.file], //Где именно
-        format: ["mp3"], //Формат
+        src: [currentMusic.file],
+        format: ["mp3"],
         volume: volume,
         onload: () => {
-          //При загрузке
           handleLengAudio(sound.current.duration());
           setIsPlay(true);
           setIsLoading(false);
@@ -301,7 +238,6 @@ function App() {
           handleIsRand();
         },
         onend: () => {
-          //При окончании
           if (isRepeatRef.current) {
             playAgainMusic();
             setIsTimer(true);
@@ -311,7 +247,6 @@ function App() {
           }
         },
         onloaderror: (id, error) => {
-          //При получении ошибки
           setInfoError(
             "Error loading sound. File: " +
               currentMusic.file +
@@ -328,8 +263,6 @@ function App() {
       }
     }
   };
-  //
-  //Удаление музыки
   //
   const handleDeleteMusic = () => {
     sound.current.stop();
@@ -348,7 +281,8 @@ function App() {
     }
   };
   //
-  //Большой массив для языка. К сожаленью, не вышло через компоненты :(
+  //Масив для перемикання між мовами. Це можна було зробити через окремий компонент,
+  //але тодішній я вирішив зробити так, як це зроблено тут
   //
   const languageOptions = [
     {
@@ -412,10 +346,6 @@ function App() {
       SucDeleteMUS: "The file has been successfully deleted",
     },
   ];
-  //
-  //
-  //
-  //Возвращение той части страницы, которая по итогу будет выбрана пользователем
   //
   return (
     <div className="wrap">

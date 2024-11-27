@@ -1,10 +1,8 @@
-//Компонент для кнопки "Проигрывание/Пауза"
 import "../App.css";
 
 function PlayButton(props) {
   //
-  //playPauseIcon получает значение определенного svg в зависимости, трек на паузе или нет
-  //
+
   const playPauseIcon = props.isPlay ? (
     <svg
       width="50"

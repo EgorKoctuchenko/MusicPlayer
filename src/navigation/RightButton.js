@@ -1,24 +1,17 @@
-//Кнопка "Следующий трек"
-
 import "../App.css";
 
 function RightButton(props) {
   //
-  //Функция для переключения на следующий трек
-  //
   const playNextMusic = () => {
     props.setIsTimer(true);
     const nextIndex = getNextIndex();
-    props.handleIsPlaying(false); //Остановить воспроизведение перед переключением
-    props.getIndex(nextIndex); //Установить новый индекс
+    props.handleIsPlaying(false);
+    props.getIndex(nextIndex);
   };
-  //
-  //Получение индекса для следующего трека
   //
   const getNextIndex = () => {
     const currentIndex = props.currentIndex;
     const nextIndex = currentIndex + 1;
-    //Если достигнут конец массива, вернуть первый элемент
     if (nextIndex >= props.MUSIC_ARR.length) {
       return 0;
     }

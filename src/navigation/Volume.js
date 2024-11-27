@@ -1,4 +1,3 @@
-//Компонент для регуляторности звука
 import "../App.css";
 import React, { useState, useEffect } from "react";
 
@@ -37,8 +36,6 @@ function Volume(props) {
       </g>
     </svg>
   );
-  //
-  //UseEffect для того, чтобы динамично менялось svg в зависимости от громкости
   //
   useEffect(() => {
     if (props.volume >= 0.7)
@@ -153,8 +150,6 @@ function Volume(props) {
       );
     }
   }, [props.volume]);
-  //
-  //При наведении, появляется менюшка с громкостью
   //
   const [isHovered, setIsHovered] = useState(false);
 

@@ -1,4 +1,3 @@
-//Компонент, для отображения определенной gif на mainmenu
 import "../App.css";
 import gif1 from "../gifies/1.gif";
 import gif2 from "../gifies/2.gif";
@@ -29,15 +28,11 @@ import React, { useState, useEffect } from "react";
 
 function Prev(props) {
   //
-  //Изначально, устанавливаем gif1
-  //
+
   const [currentGif, setCurrentGif] = useState(() => {
     const storedGif = localStorage.getItem("currentGif");
-    return storedGif || gif1; //Если нет сохраненной gif, используем gif1
+    return storedGif || gif1;
   });
-  //
-  //Хук, который при выполнении выбирает случайную gif (работает лишь в том случае, если же трек был)
-  //поменян на другой (ПАУЗА / ПРОИГРЫВАНИЕ НЕ СЧИТАЮТСЯ)
   //
   useEffect(() => {
     if (props.isRandom) {
@@ -72,7 +67,6 @@ function Prev(props) {
       const randomGif = gifs[randomIndex];
       props.handleIsStyleChange(randomIndex + 1);
 
-      //Сохраняем текущую gif в localStorage
       localStorage.setItem("currentGif", randomGif);
 
       setCurrentGif(randomGif);
