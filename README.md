@@ -1,70 +1,43 @@
-# Getting Started with Create React App
+# Solving an open transport problem / Музичний плеєр
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[🇺🇸 English](#english-version) | [🇺🇦 Українська](#українська-версія)
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## English Version
 
-### `npm start`
+This is a small web application that was created to replicate the control and appearance of almost any music player _(with a couple of tweaks)_. The [Dropbox] service (www.dropbox.com) was used as a database for music.
+Also, **it is important to note** that this web application was developed for educational purposes, but not for the purpose of commercialization or infringement of musical works.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Main functions
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Ability to upload music files from Dropbox to the external part (to the website itself).
+- The ability to add files from a computer to Dropbox using the interface of the music player itself.
+- Ability to pause, skip to the next or previous track, as well as the ability to “repeat a specific track”.
+- Delete an already added track from the list of downloaded music.
+- Use the equalizer (more like a decoration than an analysis of audio files and their tone).
 
-### `npm test`
+### Known issues
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- The most obvious problem is the inability to use it directly. Only developers will be able to test the web application (or ordinary users who delve a little deeper into the topic of tokens). This problem can be fixed very easily: use a normal relational database (for example, SQLite).
+- The basic “rewind” option is poorly implemented (has bugs).
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Українська версія
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Це невеликий веб-додаток, який було створено з метою повторити управління, зовнішній вигляд практично будь-якого музичного плеєра _(з додаванням парочки фішок)_. Як базу даних для музичних творів було використано сервіс [Dropbox](www.dropbox.com).
+Також, **важливо зазначити**, що цей веб-додаток розроблявся з метою навчання, але ніяк не з метою комерції або порушення прав музичних творів.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Основні функції
 
-### `npm run eject`
+- Можливість завантажувати музичні файли з Dropbox на зовнішню частину (на сам сайт).
+- Можливість додавати файли з комп'ютера в Dropbox за допомогою інтерфейсу самого музичного плеєра.
+- Можливість ставити на паузу, перемикати на наступний або попередній трек, а також можливість «повторювати певний трек».
+- Видаляти вже доданий трек з листа завантаженої музики.
+- Використання еквалайзера (більше як декорація, аніж аналіз аудіофайлів та їхньої тональності).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Відомі проблеми
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Найочевидніша проблема - це неможливість користуватися напряму. Лише розробники зможуть протестувати веб-додаток (або ж звичайні користувачі, які трохи заглибляться в тему токенів). Проблему цю можна виправити дуже просто: використовувати нормальну реляційну базу даних (наприклад SQLite).
+- Базова опція «перемотування» - погано реалізована (має баги).
